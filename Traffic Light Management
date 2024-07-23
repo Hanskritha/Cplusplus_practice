@@ -1,0 +1,101 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+// Class for a single Traffic Light
+class TrafficLight {
+private:
+    string location;
+    string status; // Red, Yellow, Green
+public:
+    TrafficLight(string loc) : location(loc), status("Red") {}
+
+    void changeStatus(string newStatus) {
+        if (newStatus == "Red" || newStatus == "Yellow" || newStatus == "Green") {
+            status = newStatus;
+        } else {
+            cout << "Invalid status" << endl;
+        }
+    }
+
+    void displayStatus() {
+        cout << "Traffic light at " << location << " is " << status << endl;
+    }
+};
+
+// Class for Traffic Management System
+class TrafficManagementSystem {
+private:
+    TrafficLight* trafficLights[100];
+    int trafficLightCount;
+public:
+    TrafficManagementSystem() : trafficLightCount(0) {}
+
+    void addTrafficLight(string location) {
+        if (trafficLightCount < 100) {
+            trafficLights[trafficLightCount++] = new TrafficLight(location);
+        } else {
+            cout << "Cannot add more traffic lights" << endl;
+        }
+    }
+
+    void changeTrafficLightStatus(int index, string status) {
+        if (index >= 0 && index < trafficLightCount) {
+            trafficLights[index]->changeStatus(status);
+        } else {
+            cout << "Invalid traffic light index" << endl;
+        }
+    }
+
+    void displayAllTrafficLights() {
+        for (int i = 0; i < trafficLightCount; ++i) {
+            trafficLights[i]->displayStatus();
+        }
+    }
+
+    ~TrafficManagementSystem() {
+        for (int i = 0; i < trafficLightCount; ++i) {
+            delete trafficLights[i];
+        }
+    }
+};
+
+int main() {
+    TrafficManagementSystem tms;
+    int choice;
+    string location, status;
+    int index;
+
+    while (true) {
+        cout << "1. Add Traffic Light" << endl;
+        cout << "2. Change Traffic Light Status" << endl;
+        cout << "3. Display All Traffic Lights" << endl;
+        cout << "4. Exit" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+            cout << "Enter location: ";
+            cin >> location;
+            tms.addTrafficLight(location);
+            break;
+        case 2:
+            cout << "Enter traffic light index: ";
+            cin >> index;
+            cout << "Enter new status (Red/Yellow/Green): ";
+            cin >> status;
+            tms.changeTrafficLightStatus(index, status);
+            break;
+        case 3:
+            tms.displayAllTrafficLights();
+            break;
+        case 4:
+            exit(0);
+        default:
+            cout << "Invalid choice" << endl;
+        }
+    }
+
+    return 0;
+}
